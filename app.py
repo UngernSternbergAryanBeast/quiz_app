@@ -1,7 +1,7 @@
 import json
 import random
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 
 
 class QuizApp:
@@ -11,8 +11,7 @@ class QuizApp:
         self.root.geometry("720x620")
 
         # ---------- Загрузка данных ----------
-        with open("questions.json", "r", encoding="utf-8") as f:
-            self.data = json.load(f)
+
 
         # ---------- Состояние ----------
         self.current_subject = None
@@ -26,10 +25,25 @@ class QuizApp:
         self.wrong_count = 0
 
         # ---------- UI ----------
+        self.build_pre_ui()
+    def open_file(self):
+        file_path = filedialog.askopenfilename()
+        file = open(file_path, "r", encoding="utf-8")
+        self.data = json.load(file)
+    def clear_ui(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+    def go_to_main_app(self):
         self.build_ui()
+    def build_pre_ui(self):
+        self.clear_ui()
+        tk.Button(self.root, text="Выбрать файл", command=self.open_file).pack(pady=20)
+        tk.Button(self.root, text="Продолжить", command=self.go_to_main_app).pack(pady=10)
+
 
     # ---------- UI ----------
     def build_ui(self):
+        self.clear_ui()
         tk.Label(self.root, text="Выберите предмет:", font=("Arial", 12)).pack(pady=5)
 
         self.subject_var = tk.StringVar()
