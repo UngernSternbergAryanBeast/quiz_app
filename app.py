@@ -26,10 +26,20 @@ class QuizApp:
 
         # ---------- UI ----------
         self.build_pre_ui()
+
     def open_file(self):
         file_path = filedialog.askopenfilename()
-        file = open(file_path, "r", encoding="utf-8")
-        self.data = json.load(file)
+        if not file_path:
+            return False
+
+        try:
+            with open(file_path, "r", encoding="utf-8") as file:
+                self.data = json.load(file)
+        except Exception as e:
+            messagebox.showerror("Ошибка", f"Не удалось загрузить файл:\n{e}")
+            return False
+
+        return True
     def clear_ui(self):
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -37,9 +47,18 @@ class QuizApp:
         self.build_ui()
     def build_pre_ui(self):
         self.clear_ui()
-        tk.Button(self.root, text="Выбрать файл", command=self.open_file).pack(pady=20)
-        tk.Button(self.root, text="Продолжить", command=self.go_to_main_app).pack(pady=10)
+        tk.Button(self.root, text="Выбрать файл", command=self.try_open_file).pack(pady=20)
+        self.continue_btn = tk.Button(
+            self.root,
+            text="Продолжить",
+            command=self.go_to_main_app,
+            state="disabled"
+        )
+        self.continue_btn.pack(pady=10)
 
+    def try_open_file(self):
+        if self.open_file():
+            self.continue_btn.config(state="normal")
 
     # ---------- UI ----------
     def build_ui(self):
