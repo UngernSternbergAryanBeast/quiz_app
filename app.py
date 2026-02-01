@@ -112,20 +112,40 @@ class QuizApp:
         self.question_label.pack(pady=20)
 
         # ---------- Кнопки ответов ----------
+        self.answers_frame = tk.Frame(self.root)
+        self.answers_frame.pack(fill="both", padx=20)
+
         self.buttons = []
         for i in range(4):
             btn = tk.Button(
-                self.root,
+                self.answers_frame,
                 text="",
-                width=68,
-                wraplength=640,
+                wraplength=820,  # 🔑 перенос текста
                 justify="left",
                 anchor="w",
+                font=("Arial", 12),
+                padx=10,
                 pady=8,
                 command=lambda i=i: self.check_answer(i)
             )
-            btn.pack(pady=5)
+            btn.pack(anchor="w", fill="x", pady=5)
             self.buttons.append(btn)
+
+        self.result_label = tk.Label(
+            self.root,
+            font=("Arial", 12),
+            wraplength=850,
+            justify="left"
+        )
+        self.result_label.pack(pady=10, padx=20)
+
+        self.next_btn = tk.Button(
+            self.root,
+            text="Следующий вопрос",
+            command=self.next_question,
+            state="disabled"
+        )
+        self.next_btn.pack(pady=10)
 
         # ---------- Результат ----------
         self.result_label = tk.Label(self.root, text="", font=("Arial", 12))
